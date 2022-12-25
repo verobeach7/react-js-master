@@ -1,36 +1,51 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const Father = styled.div`
+const Wrapper = styled.div`
   display: flex;
 `;
 
-const Btn = styled.button`
-  color: white;
-  background-color: tomato;
-  border: 0;
-  border-radius: 15px;
+// keyframes를 이용하여 애니메이션을 만들어 사용할 수 있음
+const rotaionAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+    border-radius:0px;
+  }
+  50% {
+    border-radius: 100px;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-radius:0px;
+  }
 `;
 
-// .attrs를 이용하여 공통적인 속성을 부여할 수 있음
-const Input = styled.input.attrs({ required: true, maxLength: 10 })`
+// ${}를 이용하여 만들어 놓은 애니메이션을 가져다 사용
+const Box = styled.div`
+  height: 200px;
+  width: 200px;
   background-color: tomato;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${rotaionAnimation} 1s linear infinite;
+  span {
+    font-size: 36px;
+    &:hover {
+      font-size: 96px;
+    }
+    &:active {
+      opacity: 0;
+    }
+  }
 `;
 
 function App() {
   return (
-    <Father as="header">
-      <Btn>Submit</Btn>
-      {/* Btn에 as를 이용하여 다른 태그로 바꾸어 이용할 수 있음 */}
-      <Btn as="a" href="/">
-        Log in
-      </Btn>
-      <hr />
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-    </Father>
+    <Wrapper>
+      <Box>
+        <span>🥳</span>
+      </Box>
+    </Wrapper>
   );
 }
 
