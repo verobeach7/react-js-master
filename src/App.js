@@ -1,26 +1,35 @@
 import styled from "styled-components";
 
-// styled.정식태그명!!!
 const Father = styled.div`
   display: flex;
 `;
 
-const Box = styled.div`
-  // props.attributes-name!!!
-  background-color: ${(props) => props.bgColor};
-  width: 100px;
-  height: 100px;
+const Btn = styled.button`
+  color: white;
+  background-color: tomato;
+  border: 0;
+  border-radius: 15px;
 `;
 
-const Circle = styled(Box)`
-  border-radius: 50px;
+// .attrs를 이용하여 공통적인 속성을 부여할 수 있음
+const Input = styled.input.attrs({ required: true, maxLength: 10 })`
+  background-color: tomato;
 `;
 
 function App() {
   return (
-    <Father>
-      <Box bgColor="teal" />
-      <Circle bgColor="tomato" />
+    <Father as="header">
+      <Btn>Submit</Btn>
+      {/* Btn에 as를 이용하여 다른 태그로 바꾸어 이용할 수 있음 */}
+      <Btn as="a" href="/">
+        Log in
+      </Btn>
+      <hr />
+      <Input />
+      <Input />
+      <Input />
+      <Input />
+      <Input />
     </Father>
   );
 }
