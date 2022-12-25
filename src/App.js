@@ -2,9 +2,10 @@ import styled, { keyframes } from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-// keyframes를 이용하여 애니메이션을 만들어 사용할 수 있음
 const rotaionAnimation = keyframes`
   0% {
     transform: rotate(0deg);
@@ -19,7 +20,11 @@ const rotaionAnimation = keyframes`
   }
 `;
 
-// ${}를 이용하여 만들어 놓은 애니메이션을 가져다 사용
+// 모든 Emoji에 적용됨
+const Emoji = styled.span`
+  font-size: 36px;
+`;
+
 const Box = styled.div`
   height: 200px;
   width: 200px;
@@ -28,8 +33,8 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
   animation: ${rotaionAnimation} 1s linear infinite;
-  span {
-    font-size: 36px;
+  // Box 내의 Emoji에만 영향을 미침
+  ${Emoji} {
     &:hover {
       font-size: 96px;
     }
@@ -43,8 +48,10 @@ function App() {
   return (
     <Wrapper>
       <Box>
-        <span>🥳</span>
+        <Emoji as="p">🥳</Emoji>
       </Box>
+      {/** Box 밖에 Emoji가 있기 때문에 pseudo selector에 의해서 선택되지 않음 */}
+      <Emoji>🥳</Emoji>
     </Wrapper>
   );
 }
