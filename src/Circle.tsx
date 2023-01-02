@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 interface ContainerProps {
@@ -13,26 +14,19 @@ const Container = styled.div<ContainerProps>`
   border: 1px solid ${(props) => props.borderColor};
 `;
 
-// ?를 이용해 required가 아닌 optional로 설정
 interface CircleProps {
   bgColor: string;
   borderColor?: string;
   text?: string;
 }
 
-// borderColor는 optional이라 있을 수도 있고 없을 수도 있음
-// text = "default text": 노말 자바스크립트 구문으로 default value를 준 것
-function Circle({ bgColor, borderColor, text = "default text" }: CircleProps) {
-  // ??를 이용해 없을 때 default값을 설정해줌, borderColor가 없다면 bgColor로 설정해줌
-  return (
-    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
-      {text}
-    </Container>
-  );
+function Circle({ bgColor, borderColor }: CircleProps) {
+  // useState<...> ...에 type을 설정하여 여러가지 타입을 혼용해 사용 가능
+  const [value, setValue] = useState<number | string>(1);
+  setValue(2);
+  setValue("Hello");
+  // setValue(true); // 에러 발생
+  return <Container bgColor={bgColor} borderColor={borderColor ?? bgColor} />;
 }
-
-/* function Circle(props: CircleProps) {
-  return <Container bgColor={props.bgColor} />;
-} */
 
 export default Circle;
