@@ -55,7 +55,7 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -66,20 +66,8 @@ interface CoinInterface {
 }
 
 function Coins() {
-  // useQuery는 두 개의 인자를 필요로 함. 첫번째는 query key(고유식별자), 두번째는 fetcher function
-  // isLoading은 boolean type으로 로딩중인지를 확인해줌, 로딩 중에는 true, 로딩 후에는 false로 바꿔줌.
-  // react query의 또 다른 장점은 데이터를 캐시에 저장하여 뒤로가기, 앞으로가기를 하여도 다시 로딩하지 않음.
-  const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
-  /*   const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins");
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []); */
+  const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+
   return (
     <Container>
       <Header>
