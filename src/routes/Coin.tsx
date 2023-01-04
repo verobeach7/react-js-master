@@ -30,12 +30,72 @@ interface RouteState {
   state: { name: string; rank: number };
 }
 
+interface IInfoData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  is_new: boolean;
+  is_active: boolean;
+  type: string;
+  logo: string;
+  description: string;
+  message: string;
+  open_source: boolean;
+  started_at: Date;
+  development_status: string;
+  hardware_wallet: boolean;
+  proof_type: string;
+  org_structure: string;
+  hash_algorithm: string;
+  first_data_at: Date;
+  last_data_at: Date;
+}
+
+interface IPriceData {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  beta_value: number;
+  first_data_at: Date;
+  last_updated: Date;
+  quotes: Quotes;
+}
+
+interface Quotes {
+  USD: Usd;
+}
+
+interface Usd {
+  price: number;
+  volume_24h: number;
+  volume_24h_change_24h: number;
+  market_cap: number;
+  market_cap_change_24h: number;
+  percent_change_15m: number;
+  percent_change_30m: number;
+  percent_change_1h: number;
+  percent_change_6h: number;
+  percent_change_12h: number;
+  percent_change_24h: number;
+  percent_change_7d: number;
+  percent_change_30d: number;
+  percent_change_1y: number;
+  ath_price: number;
+  ath_date: Date;
+  percent_from_price_ath: number;
+}
+
 function Coin() {
   const [loading, setLoading] = useState(true);
   const { coinId } = useParams();
   const { state } = useLocation() as RouteState;
-  const [info, setInfo] = useState({});
-  const [priceInfo, setPriceInfo] = useState({});
+  const [info, setInfo] = useState<IInfoData>();
+  const [priceInfo, setPriceInfo] = useState<IPriceData>();
   useEffect(() => {
     (async () => {
       const infoData = await (
@@ -46,14 +106,19 @@ function Coin() {
       ).json();
       setInfo(infoData);
       setPriceInfo(priceData);
+      setLoading(false);
     })();
-  }, []);
+  }, [coinId]);
   return (
     <Container>
       <Header>
         <Title>{state?.name || "Loading.."}</Title>
       </Header>
-      {loading ? <Loader>"Loading..."</Loader> : null}
+      {loading ? (
+        <Loader>"Loading..."</Loader>
+      ) : (
+        priceInfo?.quotes.USD.ath_price
+      )}
     </Container>
   );
 }
