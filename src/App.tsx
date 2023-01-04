@@ -66,7 +66,6 @@ a {
 
 function App() {
   return (
-    // Fragment: ghost component, 여러 개의 컴포넌트를 함께 반환함.
     <>
       <GlobalStyle />
       <Router />

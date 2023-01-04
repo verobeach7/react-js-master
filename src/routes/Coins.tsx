@@ -63,11 +63,8 @@ interface CoinInterface {
   type: string;
 }
 
-// Coins 컴포넌트
 function Coins() {
-  // typescript에게 coins state가 CoinInterface 형식(type)이라고 알려주기
   const [coins, setCoins] = useState<CoinInterface[]>([]);
-  // useState<{loading:boolean}>({loading:true})로 typescript에 형식 안려줄 수 있음
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
