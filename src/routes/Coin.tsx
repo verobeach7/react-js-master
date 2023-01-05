@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useState } from "react";
 import { useQuery } from "react-query";
 import {
   Link,
@@ -152,34 +150,15 @@ function Coin() {
   const { state } = useLocation() as RouteState;
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-  // query는 unique key를 가져야 함. key를 배열로 가지기 때문에 고유한 키로 만들기 위해 두 가지 query를 분리해줌.
-  // 둘 다 isLoading을 가지고 있는데 이름을 달리 지정해야 함. isLoading: infoLoading 이런식으로 이름을 변경하여 사용할 수 있음.
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId],
-    // fetchCoinInfo의 경우 인자를 넘겨야 하기 때문에 ()를 사용하는데 이렇게 두면 함수를 실행하여 리턴한 값이 넘어오게 됨.
-    // useQuery는 두번째 인자로 함수 자체를 넘겨줘야 함. 그래서 ()=>() 화살표 함수를 이용하여 랩핑해 줌으로써 함수로 넘겨주게 됨.
     () => fetchCoinInfo(`${coinId}`)
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
     ["tickers", coinId],
     () => fetchCoinTickers(`${coinId}`)
   );
-  /*   const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<IInfoData>();
-  const [priceInfo, setPriceInfo] = useState<IPriceData>();
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]); */
+
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
@@ -218,16 +197,16 @@ function Coin() {
             </OverviewItem>
           </Overview>
           <Tabs>
-            <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
-            </Tab>
             <Tab isActive={priceMatch !== null}>
               <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
           </Tabs>
           <Routes>
             <Route path="price" element={<Price />} />
-            <Route path="chart" element={<Chart />} />
+            <Route path="chart" element={<Chart coinId={coinId as string} />} />
           </Routes>
         </>
       )}
