@@ -2,16 +2,17 @@ import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
 import {
   Link,
-  Route,
-  Routes,
+  Outlet,
   useLocation,
   useMatch,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
-import Chart from "./Chart";
-import Price from "./Price";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -22,7 +23,7 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
@@ -82,6 +83,15 @@ const Description = styled.p`
   margin: 20px 0px;
 `;
 
+const Btn = styled.button`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  border: none;
+  background-color: #8c7ae6;
+  color: #f5f6fa;
+`;
+
 interface RouteState {
   state: { name: string; rank: number };
 }
@@ -108,7 +118,7 @@ interface IInfoData {
   last_data_at: Date;
 }
 
-interface IPriceData {
+export interface IPriceData {
   id: string;
   name: string;
   symbol: string;
@@ -160,8 +170,10 @@ function Coin() {
     () => fetchCoinTickers(`${coinId}`),
     { refetchInterval: 1000000 }
   );
-
   const loading = infoLoading || tickersLoading;
+  const isDark = useRecoilValue(isDarkAtom);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   return (
     <Container>
       <Helmet>
@@ -170,9 +182,21 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <Btn>
+          <Link to={"/"}>
+            <FontAwesomeIcon icon={faHouse} size="2x" />
+          </Link>
+        </Btn>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <Btn onClick={toggleDarkAtom}>
+          {isDark ? (
+            <FontAwesomeIcon icon={faSun} size="2x" />
+          ) : (
+            <FontAwesomeIcon icon={faMoon} size="2x" />
+          )}
+        </Btn>
       </Header>
       {loading ? (
         <Loader>"Loading..."</Loader>
@@ -189,7 +213,7 @@ function Coin() {
             </OverviewItem>
             <OverviewItem>
               <span>Price:</span>
-              <span>{tickersData?.quotes.USD.price}</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -211,10 +235,8 @@ function Coin() {
               <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
           </Tabs>
-          <Routes>
-            <Route path="price" element={<Price />} />
-            <Route path="chart" element={<Chart coinId={coinId as string} />} />
-          </Routes>
+
+          <Outlet context={{ coinId, tickersData }} />
         </>
       )}
     </Container>

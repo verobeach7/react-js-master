@@ -1,10 +1,14 @@
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { isDarkAtom } from "../atoms";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faSun } from "@fortawesome/free-solid-svg-icons";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -15,7 +19,7 @@ const Container = styled.div`
 const Header = styled.header`
   height: 15vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
@@ -57,8 +61,12 @@ const Img = styled.img`
 `;
 
 const Btn = styled.button`
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  border: none;
+  background-color: #8c7ae6;
+  color: #f5f6fa;
 `;
 
 interface ICoin {
@@ -72,6 +80,7 @@ interface ICoin {
 }
 
 function Coins() {
+  const isDark = useRecoilValue(isDarkAtom);
   const setDarkAtom = useSetRecoilState(isDarkAtom);
   const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
@@ -81,8 +90,19 @@ function Coins() {
         <title>Coins</title>
       </Helmet>
       <Header>
+        <Btn>
+          <Link to={"/"}>
+            <FontAwesomeIcon icon={faHouse} size="2x" />
+          </Link>
+        </Btn>
         <Title>Coins</Title>
-        <Btn onClick={toggleDarkAtom}>Toggle</Btn>
+        <Btn onClick={toggleDarkAtom}>
+          {isDark ? (
+            <FontAwesomeIcon icon={faSun} size="2x" />
+          ) : (
+            <FontAwesomeIcon icon={faMoon} size="2x" />
+          )}
+        </Btn>
       </Header>
       {isLoading ? (
         <Loader>"Loading..."</Loader>
