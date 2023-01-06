@@ -6,7 +6,7 @@ import Price from "./routes/Price";
 
 function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Coins />} />
         {/** Oulet 사용을 위해 자식 Route를 지정함 */}
