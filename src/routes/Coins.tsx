@@ -11,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 10vh;
+  height: 15vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,14 +20,14 @@ const Header = styled.header`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
+  border: 1px solid white;
   a {
     display: flex;
     align-items: center;
-
     padding: 20px;
     transition: color 0.2s ease-in-out;
   }
@@ -49,8 +49,8 @@ const Loader = styled.span`
 `;
 
 const Img = styled.img`
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   margin-right: 10px;
 `;
 
@@ -66,7 +66,6 @@ interface ICoin {
 
 function Coins() {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
-
   return (
     <Container>
       <Helmet>
@@ -74,12 +73,12 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coins</Title>
+        <button>Toggle</button>
       </Header>
       {isLoading ? (
         <Loader>"Loading..."</Loader>
       ) : (
         <CoinList>
-          {/** useQuery를 사용하면 typescript가 데이터 존재 여부를 모르기 때문에 ? 붙여줘야 함. */}
           {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
               <Link to={`/${coin.id}/price`} state={coin}>

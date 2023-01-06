@@ -158,7 +158,7 @@ function Coin() {
   const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
     ["tickers", coinId],
     () => fetchCoinTickers(`${coinId}`),
-    { refetchInterval: 5000 }
+    { refetchInterval: 1000000 }
   );
 
   const loading = infoLoading || tickersLoading;
